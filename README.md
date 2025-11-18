@@ -1,5 +1,7 @@
 # SG Rent or Buy
 
+https://sg-rent-or-buy.vercel.app/
+
 An interactive Singapore-focused rent vs. buy simulator that helps homeowners and renters compare the long-term financial impact of purchasing a property versus renting. 
 
 The app models cash requirements (CPF + cash), loan repayments, housing grants, stamp duties, CPF growth, investment returns, and rental cash flow so users can see which path builds more net worth over time.
