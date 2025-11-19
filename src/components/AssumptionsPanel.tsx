@@ -4,10 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronRight, Info } from "lucide-react";
+import { ChevronDown, ChevronRight, Info, RotateCcw } from "lucide-react";
 import { useState } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
 
 import {
   CPF_SALARY_CEILING_2025,
@@ -45,9 +46,11 @@ interface AssumptionsPanelProps {
     cpfContributionsEnabled: boolean;
   };
   onAssumptionsChange: (assumptions: any) => void;
+  onReset?: () => void;
 }
 
-export function AssumptionsPanel({ assumptions, onAssumptionsChange }: AssumptionsPanelProps) {
+export function AssumptionsPanel({ assumptions, onAssumptionsChange, onReset }: AssumptionsPanelProps) {
+  const [personalExpanded, setPersonalExpanded] = useState(false);
   const [buyExpanded, setBuyExpanded] = useState(true);
   const [rentExpanded, setRentExpanded] = useState(true);
   const [habitsExpanded, setHabitsExpanded] = useState(true);
@@ -97,10 +100,21 @@ export function AssumptionsPanel({ assumptions, onAssumptionsChange }: Assumptio
   return (
     <Card className="p-6 bg-card border-border/50">
       <div className="space-y-6">
-        <div>
-          <h2 className="text-lg font-semibold mb-4 text-foreground">Assumptions</h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-foreground">Assumptions</h2>
+          {onReset && (
+            <Button variant="ghost" size="icon" onClick={onReset} title="Reset to Defaults">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
 
-          <div className="space-y-4">
+        <Collapsible open={personalExpanded} onOpenChange={setPersonalExpanded}>
+          <CollapsibleTrigger className="flex items-center gap-2 w-full">
+            {personalExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+            <h3 className="text-sm font-semibold text-foreground">Personal Profile</h3>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="mt-4 space-y-4">
             <div>
               <Label className="text-sm font-medium text-foreground">Location</Label>
               <Select value={assumptions.location} onValueChange={(value) => updateAssumption("location", value)}>
@@ -313,8 +327,8 @@ export function AssumptionsPanel({ assumptions, onAssumptionsChange }: Assumptio
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </CollapsibleContent>
+        </Collapsible>
 
         <Collapsible open={habitsExpanded} onOpenChange={setHabitsExpanded}>
           <CollapsibleTrigger className="flex items-center gap-2 w-full">

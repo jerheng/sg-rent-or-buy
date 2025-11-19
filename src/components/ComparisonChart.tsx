@@ -93,15 +93,18 @@ export function ComparisonChart({ data }: ComparisonChartProps) {
                 stroke="hsl(var(--muted-foreground))"
                 fontSize={12}
                 tickLine={false}
+                label={{ value: "Year", position: "insideBottomRight", offset: -5 }}
               />
               <YAxis
                 tickFormatter={formatCurrency}
                 stroke="hsl(var(--muted-foreground))"
                 fontSize={12}
                 tickLine={false}
+                label={{ value: "Net Worth (SGD)", angle: -90, position: "insideLeft" }}
               />
               <Tooltip 
                 formatter={(value: number) => formatCurrency(value)}
+                labelFormatter={(label: number) => `Year ${label}`}
                 contentStyle={{
                   backgroundColor: "hsl(var(--card))",
                   border: "1px solid hsl(var(--border))",
@@ -152,14 +155,17 @@ export function ComparisonChart({ data }: ComparisonChartProps) {
                 dataKey="year" 
                 stroke="hsl(var(--muted-foreground))"
                 fontSize={12}
+                label={{ value: "Year", position: "insideBottomRight", offset: -5 }}
               />
               <YAxis 
                 tickFormatter={formatCurrency}
                 stroke="hsl(var(--muted-foreground))"
                 fontSize={12}
+                label={{ value: "Investments (SGD)", angle: -90, position: "insideLeft" }}
               />
               <Tooltip 
                 formatter={(value: number) => formatCurrency(value)}
+                labelFormatter={(label: number) => `Year ${label}`}
                 contentStyle={{
                   backgroundColor: "hsl(var(--card))",
                   border: "1px solid hsl(var(--border))",
@@ -201,15 +207,18 @@ export function ComparisonChart({ data }: ComparisonChartProps) {
                 stroke="hsl(var(--muted-foreground))"
                 fontSize={12}
                 tickLine={false}
+                label={{ value: "Year", position: "insideBottomRight", offset: -5 }}
               />
               <YAxis
                 tickFormatter={formatCurrency}
                 stroke="hsl(var(--muted-foreground))"
                 fontSize={12}
                 tickLine={false}
+                label={{ value: "Advantage (SGD)", angle: -90, position: "insideLeft" }}
               />
               <Tooltip
                 formatter={(value: number) => formatCurrency(value)}
+                labelFormatter={(label: number) => `Year ${label}`}
                 contentStyle={{
                   backgroundColor: "hsl(var(--card))",
                   border: "1px solid hsl(var(--border))",
@@ -217,7 +226,12 @@ export function ComparisonChart({ data }: ComparisonChartProps) {
                 }}
               />
               <Legend />
-              <ReferenceLine y={0} stroke="hsl(var(--destructive))" strokeDasharray="4 4" />
+              <ReferenceLine
+                y={0}
+                stroke="hsl(var(--destructive))"
+                strokeDasharray="4 4"
+                label="Rent = Buy"
+              />
               <Line
                 type="monotone"
                 dataKey="advantage"
@@ -259,14 +273,17 @@ export function ComparisonChart({ data }: ComparisonChartProps) {
                 dataKey="year" 
                 stroke="hsl(var(--muted-foreground))"
                 fontSize={12}
+                label={{ value: "Year", position: "insideBottomRight", offset: -5 }}
               />
               <YAxis 
                 tickFormatter={formatCurrency}
                 stroke="hsl(var(--muted-foreground))"
                 fontSize={12}
+                label={{ value: "Cumulative Housing Cost (SGD)", angle: -90, position: "insideLeft" }}
               />
               <Tooltip 
                 formatter={(value: number) => formatCurrency(value)}
+                labelFormatter={(label: number) => `Year ${label}`}
                 contentStyle={{
                   backgroundColor: "hsl(var(--card))",
                   border: "1px solid hsl(var(--border))",
@@ -317,14 +334,17 @@ export function ComparisonChart({ data }: ComparisonChartProps) {
                 dataKey="year" 
                 stroke="hsl(var(--muted-foreground))"
                 fontSize={12}
+                label={{ value: "Year", position: "insideBottomRight", offset: -5 }}
               />
               <YAxis 
                 tickFormatter={formatCurrency}
                 stroke="hsl(var(--muted-foreground))"
                 fontSize={12}
+                label={{ value: "Savings / Investments (SGD)", angle: -90, position: "insideLeft" }}
               />
               <Tooltip 
                 formatter={(value: number) => formatCurrency(value)}
+                labelFormatter={(label: number) => `Year ${label}`}
                 contentStyle={{
                   backgroundColor: "hsl(var(--card))",
                   border: "1px solid hsl(var(--border))",

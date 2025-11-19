@@ -12,6 +12,7 @@ import {
 } from "@/lib/singapore-property";
 import { CalculationTable } from "@/components/CalculationTable";
 import { Link } from "react-router-dom";
+import { ModeToggle } from "@/components/mode-toggle";
 
 const ASSUMPTIONS_STORAGE_KEY = "sg_property_calculator_assumptions";
 
@@ -479,6 +480,12 @@ const Index = () => {
     }
   })();
 
+  const handleReset = () => {
+    if (confirm("Are you sure you want to reset all assumptions to default values?")) {
+      setAssumptions(defaultAssumptions);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -491,9 +498,12 @@ const Index = () => {
               <p className="text-sm text-muted-foreground">Rent vs Buy Comparison for Singapore</p>
             </div>
           </div>
-          <Link to="/facts" className="text-sm font-medium text-primary hover:underline">
-            View Fact Sheet
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link to="/facts" className="text-sm font-medium text-primary hover:underline">
+              View Fact Sheet
+            </Link>
+            <ModeToggle />
+          </div>
         </div>
       </header>
 
@@ -641,6 +651,7 @@ const Index = () => {
             <AssumptionsPanel
               assumptions={assumptions}
               onAssumptionsChange={setAssumptions}
+              onReset={handleReset}
             />
           </div>
         </div>
