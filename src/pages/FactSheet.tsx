@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, ExternalLink, Home } from "lucide-react";
+import { ArrowLeft, ExternalLink, Home, Github } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { ModeToggle } from "@/components/mode-toggle";
 
 const FactSheet = () => {
     return (
@@ -15,13 +16,25 @@ const FactSheet = () => {
                             <p className="text-sm text-muted-foreground">Rent vs Buy Comparison for Singapore</p>
                         </div>
                     </div>
-                    <Link
-                        to="/"
-                        className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-                    >
-                        <ArrowLeft className="h-4 w-4" />
-                        Back to Calculator
-                    </Link>
+                    <div className="flex items-center gap-4">
+                        <Link
+                            to="/"
+                            className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+                        >
+                            <ArrowLeft className="h-4 w-4" />
+                            Back to Calculator
+                        </Link>
+                        <a
+                            href="https://github.com/jerheng/sg-rent-or-buy"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-muted-foreground hover:text-primary"
+                            aria-label="View source on GitHub"
+                        >
+                            <Github className="h-5 w-5" />
+                        </a>
+                        <ModeToggle />
+                    </div>
                 </div>
             </header>
 

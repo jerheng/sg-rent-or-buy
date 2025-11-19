@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { Home, TrendingUp, Percent, DollarSign, AlertTriangle } from "lucide-react";
+import { Home, TrendingUp, Percent, DollarSign, AlertTriangle, Github } from "lucide-react";
 import { MetricCard } from "@/components/MetricCard";
 import { ComparisonChart } from "@/components/ComparisonChart";
 import { AssumptionsPanel } from "@/components/AssumptionsPanel";
@@ -103,6 +103,9 @@ const Index = () => {
     const MSR_LIMIT = 0.3;
     const TDSR_LIMIT = 0.55;
     const MIN_CASH_BANK = 0.05;
+    const minDownPaymentPct = 1 - LTV_LIMIT;
+    const userDownPaymentPct = (assumptions.downPayment ?? minDownPaymentPct * 100) / 100;
+    const effectiveDownPaymentPct = Math.min(Math.max(userDownPaymentPct, minDownPaymentPct), 1);
 
     const calculateCPFInterest = (balance: number) => {
       const baseRate = 0.025;
@@ -134,7 +137,7 @@ const Index = () => {
       annualRate = HDB_INTEREST;
       tenureYears = Math.min(25, assumptions.timeHorizon, maxTenureByAge);
 
-      const downPaymentTotal = price * 0.25;
+      const downPaymentTotal = price * effectiveDownPaymentPct;
       const availableCpfForDown = cpfBalance + grants;
       const cpfOrGrantsUsed = Math.min(downPaymentTotal, availableCpfForDown);
       minCashRequired = Math.max(0, downPaymentTotal - cpfOrGrantsUsed);
@@ -146,9 +149,10 @@ const Index = () => {
       tenureYears = Math.min(30, assumptions.timeHorizon, maxTenureByAge);
 
       const covCash = Math.max(0, price - valuation);
-      const downOnValuation = valuation * 0.25;
+      const downPaymentPct = effectiveDownPaymentPct;
+      const downOnValuation = valuation * downPaymentPct;
       const minCashDown = valuation * MIN_CASH_BANK;
-      const remainingDown = downOnValuation - minCashDown;
+      const remainingDown = Math.max(0, downOnValuation - minCashDown);
 
       const availableCpfAndGrants = cpfBalance + grants;
       const cpfAndGrantsUsed = Math.min(remainingDown, availableCpfAndGrants);
@@ -156,24 +160,24 @@ const Index = () => {
 
       minCashRequired = minCashDown + covCash + extraCashForDown;
 
-      loanAmount = valuation - (minCashDown + cpfAndGrantsUsed + extraCashForDown);
-      loanAmount = Math.min(loanAmount, valuation * LTV_LIMIT);
+      const rawLoanAmount = valuation - downOnValuation;
+      loanAmount = Math.min(rawLoanAmount, valuation * LTV_LIMIT);
     } else {
       caseLabel = "Private Condo (Bank Loan)";
       annualRate = (assumptions.bankInterestRate || 3) / 100;
       tenureYears = Math.min(30, assumptions.timeHorizon, maxTenureByAge);
 
-      const downPaymentTotal = price * 0.25;
+      const downPaymentPct = effectiveDownPaymentPct;
+      const downPaymentTotal = price * downPaymentPct;
       const minCashDown = price * MIN_CASH_BANK;
-      const maxCpfForDown = price * 0.20;
-      const cpfUsedForDown = Math.min(maxCpfForDown, cpfBalance);
-      const remainingDownAfterCpf = downPaymentTotal - (minCashDown + cpfUsedForDown);
-      const extraCashForDown = Math.max(0, remainingDownAfterCpf);
+      const remainingDown = Math.max(0, downPaymentTotal - minCashDown);
+      const cpfUsedForDown = Math.min(remainingDown, cpfBalance);
+      const extraCashForDown = Math.max(0, remainingDown - cpfUsedForDown);
 
       minCashRequired = minCashDown + extraCashForDown;
 
-      loanAmount = price - (minCashDown + cpfUsedForDown + extraCashForDown);
-      loanAmount = Math.min(loanAmount, price * LTV_LIMIT);
+      const rawLoanAmount = price - downPaymentTotal;
+      loanAmount = Math.min(rawLoanAmount, price * LTV_LIMIT);
     }
 
     const bsdAmount = calculateBSD(price);
@@ -213,8 +217,8 @@ const Index = () => {
     // Buy Scenario State
     let buyPropertyValue = price;
     let buyLoanBalance = loanAmount;
-    let buyLiquidCash = assumptions.cashOnHand - (minCashRequired + totalStampDuty); // Remaining cash after purchase
-    let buyCPF = assumptions.cpfBalance - (assumptions.downPayment / 100 * price - minCashRequired); // Remaining CPF
+    let buyLiquidCash = assumptions.cashOnHand;
+    let buyCPF = assumptions.cpfBalance;
     // Note: The above CPF calculation is simplified. Realistically, CPF usage depends on the specific split.
     // Let's use the logic from before:
     // minCashRequired is calculated based on regulations.
@@ -489,7 +493,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-border/50 bg-card">
+      <header className="border-b border-border/50 bg-card sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Home className="h-8 w-8 text-primary" />
@@ -502,6 +506,15 @@ const Index = () => {
             <Link to="/facts" className="text-sm font-medium text-primary hover:underline">
               View Fact Sheet
             </Link>
+            <a
+              href="https://github.com/jerheng/sg-rent-or-buy"
+              target="_blank"
+              rel="noreferrer"
+              className="text-muted-foreground hover:text-primary"
+              aria-label="View source on GitHub"
+            >
+              <Github className="h-5 w-5" />
+            </a>
             <ModeToggle />
           </div>
         </div>
